@@ -1,7 +1,9 @@
 from pydantic import BaseModel
+from datetime import date
 
 class EntityBase(BaseModel):
     """Pydantic base model of Entity table"""
+    date: date
     title: str
     quantity: int
     distance: float
@@ -15,4 +17,4 @@ class Entity(EntityBase):
     id: int
 
     class Config:
-        orm_mod = True
+        orm_mode = True

@@ -1,24 +1,41 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, HTTPException
+from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from datetime import datetime
 
+from database_module import crud, models, schemas
+from database_module.database import SessionLocal, engine
+
+models.Base.metadata.create_all(bind=engine)
+
 app = FastAPI()
 
-class Table(BaseModel):
-    id: int
-    date: str
-    quantity: int
-    title: str
-    distance: float
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
-fake_db = [
-    {"id": 1, "date": datetime.now().strftime("%d-%m-%Y"), "quantity": 2, "title": "first", "distance": 100},
-    {"id": 2, "date": datetime.now().strftime("%d-%m-%Y"), "quantity": 4, "title": "second", "distance": 150},
-    {"id": 3, "date": datetime.now().strftime("%d-%m-%Y"), "quantity": 6, "title": "third", "distance": 120}
-]
+
+@app.get("/entities/", response_model=list[schemas.Entity])
+def read_entities(
+                    sort_field: str | None = None,
+                    sort_type: str | None = None,
+                    filter_field_1: str | None = None,
+                    filter_condition_1 : str | None = None,
+                    filter_field_2: str | None = None,
+                    filter_condition_2 : str | None = None,
+                    skip: int = 0,
+                    limit: int = 25,
+                    db: Session = Depends(get_db),
+                ):
+    entities = crud.get_entities(db=db, skip=skip, limit=limit)
+    return entities
 
 
-@app.get("/", response_model=list[Table])
-async def root():
-    return fake_db
+@app.post("/entities/", response_model=schemas.Entity)
+def create_entity(entity: schemas.EntityCreate, db: Session = Depends(get_db)):
+    return crud.create_entity(db=db, entity=entity)

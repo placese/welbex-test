@@ -10,7 +10,7 @@ def get_entities(db: Session, skip: int = 0, limit: int = 25):
     """Returns list of entities"""
     return db.query(models.Entity).offset(skip).limit(limit).all()
 
-def create_entity(db: Session, entity: schemas.EntityCreate) -> models.Entity:
+def create_entity(db: Session, entity: schemas.EntityCreate):
     """Creates entity in db and returns it"""
     db_entity = models.Entity(date=entity.date, title=entity.title, quantity=entity.quantity, distance=entity.distance)
     db.add(db_entity)
