@@ -4,7 +4,7 @@
 ## Database: PostgreSQL
 ## Frontend: ReactJS
 
-![alt text](https://github.com/placese/welbex-test/img.png?raw=true)
+![alt text](https://github.com/placese/welbex-test/img.png)
 
 ### Идеи для доработки:
 
