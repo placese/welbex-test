@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import ReactPaginate from 'react-paginate';
 
 
 const RowsContext = React.createContext({
@@ -17,6 +18,8 @@ let order_by = "asc"
 let filter_field = null
 let filter_type = null
 let filter_value = null
+let slice_start = 0
+let slice_stop = 20
 
 export default function Rows() {
     const [rows, setRows] = useState([])
@@ -37,7 +40,6 @@ export default function Rows() {
     }, [])
     
     const handleClick = (e) => {
-        console.log(field_to_sort_by, e.target.getAttribute('data-column'), order_by)
         if (field_to_sort_by == e.target.getAttribute('data-column') && order_by == "asc") {
             order_by = "desc"
             field_to_sort_by = e.target.getAttribute('data-column')
@@ -55,6 +57,8 @@ export default function Rows() {
         filter_field = document.getElementById('column-select').value
         filter_type = document.getElementById('condition-select').value
         filter_value = document.getElementById('filter-input').value
+        slice_start = 0
+        slice_stop = 20
         fetchRows()
     }
 
@@ -82,8 +86,15 @@ export default function Rows() {
                 break;
         }
     }
-    
+
+    const handlePageClick = (e) => {
+        slice_start = 20 * e.selected
+        slice_stop = 20 * (e.selected + 1)
+        fetchRows()
+    };
+
     return (
+        <div>
         <div className="Content">
         <div className="select">
         <select onChange={switchSelectOption} id="column-select">
@@ -111,7 +122,7 @@ export default function Rows() {
                 <th onClick={handleClick} data-column="quantity" data-order="desc">Количество</th>
                 <th onClick={handleClick} data-column="distance" data-order="desc">Расстояние</th>
             </tr>
-                {rows.map((val, key) =>(
+                {rows.slice(slice_start, slice_stop).map((val, key) =>(
                     <tr key={key}>
                         <td>{val.date}</td>
                         <td>{val.title}</td>
@@ -124,6 +135,20 @@ export default function Rows() {
             </table>
         </div>
         <div id="empty"></div>
+        </div>
+        <div id="listingTable"></div>
+        <ReactPaginate
+            breakLabel="..."
+            nextLabel="next >"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={5}
+            pageCount={Math.ceil((rows.length / 20))}
+            previousLabel="< previous"
+            renderOnZeroPageCount={null}
+            containerClassName={'pagination'}
+            subContainerClassName={'pages pagination'}
+            activeClassName={'active'}
+        />
         </div>
     )    
 };
