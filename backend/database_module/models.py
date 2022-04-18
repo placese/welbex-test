@@ -3,6 +3,7 @@ from .database import Base
 
 
 class Entity(Base):
+    """ORM class mapping to db table""" 
     __tablename__ = "entity"
 
     id = Column(Integer, primary_key=True, index=True)

@@ -1,11 +1,11 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, NonNegativeInt
 from datetime import date
 
 class EntityBase(BaseModel):
     """Pydantic base model of Entity table"""
     date: date
     title: str
-    quantity: int
+    quantity: NonNegativeInt
     distance: float
 
 class EntityCreate(EntityBase):

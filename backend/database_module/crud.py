@@ -6,9 +6,10 @@ def get_entity(db: Session, id: int):
     """Returns entity from table by id"""
     return db.query(models.Entity).filter(models.Entity.id == id).first()
 
+
 def get_entities(db: Session, skip: int = 0, limit: int = 25):
     """Returns list of entities"""
-    return db.query(models.Entity).offset(skip).limit(limit).all()
+    return db.query(models.Entity).order_by(models.Entity.quantity).offset(skip).limit(limit).all()
 
 def create_entity(db: Session, entity: schemas.EntityCreate):
     """Creates entity in db and returns it"""
