@@ -34,9 +34,7 @@ def get_db():
     finally:
         db.close()
 
-
-
-
+@logger.catch
 @app.get("/entities/", response_model=list[schemas.Entity])
 def read_entities(field_to_sort_by: str = 'quantity',
                   order_by: str = 'asc',
@@ -44,7 +42,7 @@ def read_entities(field_to_sort_by: str = 'quantity',
                   filter_type: str | None = None,
                   filter_value: str | None = None,
                   skip: int = 0,
-                  limit: int = 25,
+                  limit: int = 100,
                   db: Session = Depends(get_db)):
     """Returns entities in JSON format"""
     if field_to_sort_by in FieldSortParams._member_names_:

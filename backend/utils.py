@@ -1,6 +1,5 @@
 from enum import Enum
 from database_module import schemas
-from loguru import logger
 
 class FieldSortParams(Enum):
     quantity: str = 'quantity'

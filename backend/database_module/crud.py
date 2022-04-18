@@ -7,7 +7,7 @@ def get_entity(db: Session, id: int):
     return db.query(models.Entity).filter(models.Entity.id == id).first()
 
 
-def get_entities(db: Session, skip: int = 0, limit: int = 25):
+def get_entities(db: Session, skip: int = 0, limit: int = 100):
     """Returns list of entities"""
     return db.query(models.Entity).order_by(models.Entity.quantity).offset(skip).limit(limit).all()
 
